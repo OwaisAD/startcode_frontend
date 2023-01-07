@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import "../styles/styles.css";
 import { useNavigate } from "react-router-dom";
-import NavButton from "../navbar/NavButton";
+import NavButton from "../components/navbar/NavButton"
 import facade from "../facades/apiFacade";
 
 function Header({ loggedIn, setLoggedIn, setCreateAccountClicked }) {
@@ -84,7 +84,7 @@ function Header({ loggedIn, setLoggedIn, setCreateAccountClicked }) {
                 onClick={() => {
                   setCreateAccountClicked(false);
                 }}
-                to="/login"
+                to="/signin"
               />
             ) : (
               <>
