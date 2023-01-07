@@ -1,6 +1,4 @@
 import { BASE_API_URL as URL } from "../../settings";
-import { DAWA_URL } from "../../settings";
-import { DAWA_URL_REVERSE } from "../../settings";
 
 const handleHttpErrors = async (res) => {
   if (!res.ok) {
