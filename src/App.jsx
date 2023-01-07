@@ -1,34 +1,83 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import React, { useState } from "react";
+import { Routes, Route, redirect } from "react-router-dom";
+import Header from "./components/Header";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Error from "./pages/404";
+import SignIn from "./pages/SignIn";
+import Profile from "./pages/Profile";
+import Register from "./pages/Registration";
+import ProtectedRoutes from "./ProtectedRoutes";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  let loggedInInitial = window.localStorage.getItem("isLoggedIn");
+
+  const [loggedIn, setLoggedIn] = useState(loggedInInitial);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [createAccountClicked, setCreateAccountClicked] = useState(false);
+  const [editedProfile, setEditedProfile] = useState(false);
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
-}
+    <>
+      <Header
+        setLoggedIn={setLoggedIn}
+        loggedIn={loggedIn}
+        setErrorMsg={setErrorMsg}
+        setCreateAccountClicked={setCreateAccountClicked}
+        editedProfile={editedProfile}
+      />
 
-export default App
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route element={<ProtectedRoutes />}>
+          {/* <Route path="/trips" element={<Trips />}/>
+          <Route path="/trips/:id" element={<Trip />} />
+          <Route path="/createtrip" element={<CreateTrip />} /> */}
+          <Route
+            path="/profile"
+            element={
+              <Profile
+                loggedIn={loggedIn}
+                setLoggedIn={setLoggedIn}
+                editedProfile={editedProfile}
+                setEditedProfile={setEditedProfile}
+              />
+            }
+          />
+        </Route>
+
+        <Route
+          path="/signin"
+          element={
+            <SignIn
+              loggedIn={loggedIn}
+              setLoggedIn={setLoggedIn}
+              setErrorMsg={setErrorMsg}
+              errorMsg={errorMsg}
+              createAccountClicked={createAccountClicked}
+              setCreateAccountClicked={setCreateAccountClicked}
+            />
+          }
+        />
+
+        <Route
+          path="/register"
+          element={
+            <Register
+              loggedIn={loggedIn}
+              setLoggedIn={setLoggedIn}
+              setErrorMsg={setErrorMsg}
+              errorMsg={errorMsg}
+            />
+          }
+        />
+
+        <Route path="error" element={<Error errorMsg={errorMsg} />} />
+        <Route path="*" element={<Home />} />
+      </Routes>
+    </>
+  );
+};
+
+export default App;
