@@ -31,11 +31,9 @@ const Profile = ({ loggedIn, setLoggedIn, editedProfile, setEditedProfile }) => 
       facade.fetchData().then((data) => {
         setDataFromServer(data);
       });
-    }
 
-    facade.fetchHistoryOfTrips().then((data) => {
-      setHistoryOfTrips(data);
-    });
+      console.log(facade.getRole());
+    }
   }, [editedUsername, editedEmail, editedAge]);
 
   const handleUsernameUpdate = async () => {

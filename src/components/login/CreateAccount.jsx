@@ -78,7 +78,7 @@ const CreateAccountComponent = ({ setErrorMsg, errorMsg }) => {
       .createUser(user, email, pass, age)
       .then(() => {
         // SET SOME KIND OF SUCCESS MESSAGE
-        navigate("/login");
+        navigate("/signin");
       })
       .catch((err) => {
         err.fullError.then((e) => setErrorMsg(e.message));

@@ -45,6 +45,14 @@ function apiFacade() {
     localStorage.removeItem("isLoggedIn");
   };
 
+  const parseJwt = async (token) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+      return null;
+    }
+  };
+
   const login = async (username, password) => {
     const options = makeOptions("POST", true, {
       username: username,
@@ -55,8 +63,12 @@ function apiFacade() {
       .then(handleHttpErrors)
       .then((res) => {
         setToken(res.token);
-        setRole(res.roles);
-        setUsername(res.username);
+        return parseJwt(res.token);
+      })
+      .then((response) => {
+        console.log(response);
+        setRole(response.roles);
+        setUsername(response.name);
         window.localStorage.setItem("isLoggedIn", true);
       });
   };
