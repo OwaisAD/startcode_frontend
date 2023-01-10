@@ -1,5 +1,13 @@
 import { BASE_API_URL as URL } from "../../settings";
 
+const parseJwt = async (token) => {
+  try {
+    return JSON.parse(atob(token.split(".")[1]));
+  } catch (e) {
+    return null;
+  }
+};
+
 const handleHttpErrors = async (res) => {
   if (!res.ok) {
     return await Promise.reject({ status: res.status, fullError: res.json() });
@@ -21,7 +29,10 @@ function apiFacade() {
   };
 
   const getRole = () => {
-    return localStorage.getItem("roles");
+    // return localStorage.getItem("roles");
+    return parseJwt(localStorage.getItem("jwtToken")).then((res) => {
+      return res.roles;
+    });
   };
 
   const setUsername = (username) => {
@@ -45,14 +56,6 @@ function apiFacade() {
     localStorage.removeItem("isLoggedIn");
   };
 
-  const parseJwt = async (token) => {
-    try {
-      return JSON.parse(atob(token.split(".")[1]));
-    } catch (e) {
-      return null;
-    }
-  };
-
   const login = async (username, password) => {
     const options = makeOptions("POST", true, {
       username: username,
@@ -66,7 +69,6 @@ function apiFacade() {
         return parseJwt(res.token);
       })
       .then((response) => {
-        console.log(response);
         setRole(response.roles);
         setUsername(response.name);
         window.localStorage.setItem("isLoggedIn", true);

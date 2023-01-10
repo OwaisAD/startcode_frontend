@@ -11,9 +11,6 @@ const Profile = ({ loggedIn, setLoggedIn, editedProfile, setEditedProfile }) => 
   const ageRef = useRef();
 
   const [dataFromServer, setDataFromServer] = useState("Loading...");
-  // NEED TO HAVE A STATE THAT CHECKS WETHER A USER ADDED A MOVIE TO WATCHLIST, IF YES, THEN USEEFFECT SHOULD RELY ON THAT VARIABLE
-
-  const [historyOfTrips, setHistoryOfTrips] = useState([]);
 
   const [editingUsername, setEditingUsername] = useState(false);
   const [editedUsername, setEditedUsername] = useState(false); //only used for the useeffect
@@ -25,14 +22,17 @@ const Profile = ({ loggedIn, setLoggedIn, editedProfile, setEditedProfile }) => 
   const [editedAge, setEditedAge] = useState(false); //only used for the useeffect
 
   useEffect(() => {
+    const role = facade.getRole().then((result) => {
+      console.log(result);
+      return result;
+    });
     let isLoggedIn = facade.loggedIn();
     if (isLoggedIn) {
       setLoggedIn(true);
       facade.fetchData().then((data) => {
         setDataFromServer(data);
+        console.log(data);
       });
-
-      console.log(facade.getRole());
     }
   }, [editedUsername, editedEmail, editedAge]);
 
@@ -104,16 +104,6 @@ const Profile = ({ loggedIn, setLoggedIn, editedProfile, setEditedProfile }) => 
     }
   };
 
-  const days = {
-    0: "Sunday",
-    1: "Monday",
-    2: "Tuesday",
-    3: "Wednesday",
-    4: "Thursday",
-    5: "Friday",
-    6: "Saturday",
-  };
-
   return (
     <>
       {!loggedIn ? (
@@ -130,19 +120,6 @@ const Profile = ({ loggedIn, setLoggedIn, editedProfile, setEditedProfile }) => 
             <div className="profile-container">
               <div className="profile-inner-container">
                 <h3 className="text-center mb-4">Trip History</h3>
-
-                {historyOfTrips.length < 1 ? (
-                  <p>No trips in history</p>
-                ) : (
-                  historyOfTrips?.map((trip) => {
-                    console.log(trip);
-                    return (
-                      <li key={trip?.id} style={{ listStyleType: "none" }}>
-                        {days[new Date(trip?.date).getDay()]} {trip?.date}, status: {trip?.status}
-                      </li>
-                    );
-                  })
-                )}
               </div>
 
               <div className="profile-inner-container">
